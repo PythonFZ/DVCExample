@@ -8,7 +8,6 @@ from zntrack import NodeConfig, nodify
 
 
 @nodify(
-    params={"seed": 20170428, "n_est": 50, "min_split": 2},
     deps=[Path("data", "features"), "model.pkl", Path("src", "evaluate.py")],
     metrics_no_cache="scores.json",
     plots_no_cache=["prc.json", "roc.json"],

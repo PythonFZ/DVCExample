@@ -32,8 +32,6 @@ stages:
     - data/features
     - model.pkl
     - src/evaluate.py
-    params:
-    - evaluate
     metrics:
     - scores.json:
         cache: false

@@ -70,14 +70,8 @@ stages:
       md5: 9db4774fe0fd46bec983ae3fb2945760
       size: 2658152
     - path: src/evaluate.py
-      md5: e67e265cdecc78a27c4f89204d5ac622
-      size: 2370
-    params:
-      params.yaml:
-        evaluate:
-          min_split: 2
-          n_est: 50
-          seed: 20170428
+      md5: 04f59f7e4a2340d62c6902351709537c
+      size: 2309
     outs:
     - path: prc.json
       md5: ecfb2f2057eac913c2ce68876ced720c

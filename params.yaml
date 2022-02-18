@@ -1,7 +1,4 @@
-evaluate:
-    min_split: 2
-    n_est: 50
-    seed: 20170428
+evaluate: null
 featurize:
     max_features: 500
     ngrams: 1
