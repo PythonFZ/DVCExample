@@ -47,8 +47,7 @@ with open(prc_file, "w") as fd:
     json.dump(
         {
             "prc": [
-                {"precision": p, "recall": r, "threshold": t}
-                for p, r, t in prc_points
+                {"precision": p, "recall": r, "threshold": t} for p, r, t in prc_points
             ]
         },
         fd,
