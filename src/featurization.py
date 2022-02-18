@@ -1,29 +1,14 @@
-import os
 import pickle
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import scipy.sparse as sparse
-import yaml
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from zntrack import Node, dvc, zn
 
-params = yaml.safe_load(open("params.yaml"))["featurize"]
-
-np.set_printoptions(suppress=True)
-
-if len(sys.argv) != 3 and len(sys.argv) != 5:
-    sys.stderr.write("Arguments error. Usage:\n")
-    sys.stderr.write("\tpython featurization.py data-dir-path features-dir-path\n")
-    sys.exit(1)
-
-train_input = os.path.join(sys.argv[1], "train.tsv")
-test_input = os.path.join(sys.argv[1], "test.tsv")
-train_output = os.path.join(sys.argv[2], "train.pkl")
-test_output = os.path.join(sys.argv[2], "test.pkl")
-
-max_features = params["max_features"]
-ngrams = params["ngrams"]
+from .prepare import Prepare
 
 
 def get_df(data):
@@ -52,30 +37,39 @@ def save_matrix(df, matrix, output):
     pass
 
 
-os.makedirs(sys.argv[2], exist_ok=True)
+class Featurize(Node):
+    prepare: Prepare = zn.deps(Prepare)
+    max_features = zn.params(500)
+    ngrams = zn.params(1)
+    train_output: Path = dvc.outs(Path("data", "features", "train.pkl"))
+    test_output: Path = dvc.outs(Path("data", "features", "test.pkl"))
+    _self = dvc.deps(Path("src", "featurization.py"))
 
-# Generate train feature matrix
-df_train = get_df(train_input)
-train_words = np.array(df_train.text.str.lower().values.astype("U"))
+    def run(self):
+        self.train_output.parent.mkdir(exist_ok=True, parents=True)
 
-bag_of_words = CountVectorizer(
-    stop_words="english", max_features=max_features, ngram_range=(1, ngrams)
-)
+        # Generate train feature matrix
+        df_train = get_df(self.prepare.output_train)
+        train_words = np.array(df_train.text.str.lower().values.astype("U"))
 
-bag_of_words.fit(train_words)
-train_words_binary_matrix = bag_of_words.transform(train_words)
-tfidf = TfidfTransformer(smooth_idf=False)
-tfidf.fit(train_words_binary_matrix)
-train_words_tfidf_matrix = tfidf.transform(train_words_binary_matrix)
+        bag_of_words = CountVectorizer(
+            stop_words="english",
+            max_features=self.max_features,
+            ngram_range=(1, self.ngrams),
+        )
 
-save_matrix(df_train, train_words_tfidf_matrix, train_output)
+        bag_of_words.fit(train_words)
+        train_words_binary_matrix = bag_of_words.transform(train_words)
+        tfidf = TfidfTransformer(smooth_idf=False)
+        tfidf.fit(train_words_binary_matrix)
+        train_words_tfidf_matrix = tfidf.transform(train_words_binary_matrix)
 
-# Generate test feature matrix
-df_test = get_df(test_input)
-test_words = np.array(df_test.text.str.lower().values.astype("U"))
-test_words_binary_matrix = bag_of_words.transform(test_words)
-test_words_tfidf_matrix = tfidf.transform(test_words_binary_matrix)
+        save_matrix(df_train, train_words_tfidf_matrix, self.train_output)
 
-save_matrix(df_test, test_words_tfidf_matrix, test_output)
+        # Generate test feature matrix
+        df_test = get_df(self.prepare.output_test)
+        test_words = np.array(df_test.text.str.lower().values.astype("U"))
+        test_words_binary_matrix = bag_of_words.transform(test_words)
+        test_words_tfidf_matrix = tfidf.transform(test_words_binary_matrix)
 
-# dvc run -n featurize -p featurize.max_features,featurize.ngrams -d src/featurization.py -d data/prepared -o data/features python src/featurization.py data/prepared data/features
+        save_matrix(df_test, test_words_tfidf_matrix, self.test_output)

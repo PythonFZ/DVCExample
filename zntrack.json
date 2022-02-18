@@ -1,0 +1,73 @@
+{
+    "Prepare": {
+        "data": {
+            "_type": "pathlib.Path",
+            "value": "data/data.xml"
+        },
+        "output_train": {
+            "_type": "pathlib.Path",
+            "value": "data/prepared/train.tsv"
+        },
+        "output_test": {
+            "_type": "pathlib.Path",
+            "value": "data/prepared/test.tsv"
+        },
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/prepare.py"
+        }
+    },
+    "Featurize": {
+        "prepare": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.prepare",
+                "cls": "Prepare",
+                "name": "Prepare"
+            }
+        },
+        "train_output": {
+            "_type": "pathlib.Path",
+            "value": "data/features/train.pkl"
+        },
+        "test_output": {
+            "_type": "pathlib.Path",
+            "value": "data/features/test.pkl"
+        },
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/featurization.py"
+        }
+    },
+    "Train": {
+        "featurize": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.featurization",
+                "cls": "Featurize",
+                "name": "Featurize"
+            }
+        },
+        "model_file": "model.pkl",
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/train.py"
+        }
+    },
+    "Evaluate": {
+        "train": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.train",
+                "cls": "Train",
+                "name": "Train"
+            }
+        },
+        "prc_file": "prc.json",
+        "roc_file": "roc.json",
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/evaluate.py"
+        }
+    }
+}

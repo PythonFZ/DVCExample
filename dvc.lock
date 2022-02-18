@@ -1,81 +1,92 @@
 schema: '2.0'
 stages:
-  prepare:
-    cmd: python src/prepare.py data/data.xml
+  Prepare:
+    cmd: "python -c \"from src.prepare import Prepare; Prepare.load(name='Prepare').run_and_save()\"\
+      \ "
     deps:
     - path: data/data.xml
       md5: a304afb96060aad90176268345e10355
       size: 37891850
     - path: src/prepare.py
-      md5: 43f914866bc9eec6b0576d0dad7f35b7
-      size: 1774
+      md5: 3c33de5974488f91e2103613a8be6e18
+      size: 1836
     params:
       params.yaml:
-        prepare.seed: 20170428
-        prepare.split: 0.2
+        Prepare:
+          seed: 20170428
+          split: 0.2
     outs:
-    - path: data/prepared
-      md5: 20b786b6e6f80e2b3fcf17827ad18597.dir
-      size: 23886319
-      nfiles: 2
-  featurize:
-    cmd: python src/featurization.py data/prepared data/features
+    - path: data/prepared/test.tsv
+      md5: 6f597d341ceb7d8fbbe88859a892ef81
+      size: 4769363
+    - path: data/prepared/train.tsv
+      md5: 32b715ef0d71ff4c9e61f55b09c15e75
+      size: 19116956
+  Featurize:
+    cmd: "python -c \"from src.featurization import Featurize; Featurize.load(name='Featurize').run_and_save()\"\
+      \ "
     deps:
-    - path: data/prepared
-      md5: 20b786b6e6f80e2b3fcf17827ad18597.dir
-      size: 23886319
-      nfiles: 2
+    - path: data/prepared/test.tsv
+      md5: 6f597d341ceb7d8fbbe88859a892ef81
+      size: 4769363
+    - path: data/prepared/train.tsv
+      md5: 32b715ef0d71ff4c9e61f55b09c15e75
+      size: 19116956
     - path: src/featurization.py
-      md5: 347f25348172f9b07c4ada6d927541c2
-      size: 2653
+      md5: 4f02d866a8a1eb9c9b055f0d2068b23e
+      size: 2551
     params:
       params.yaml:
-        featurize.max_features: 500
-        featurize.ngrams: 1
+        Featurize:
+          max_features: 500
+          ngrams: 1
     outs:
-    - path: data/features
-      md5: b4d13e5525577c1e4cbd31eafd1623d0.dir
-      size: 7083901
-      nfiles: 2
-  train:
-    cmd: python src/train.py data/features model.pkl
+    - path: data/features/test.pkl
+      md5: 8f66d794472e39baccdcc2c7debb4854
+      size: 1410882
+    - path: data/features/train.pkl
+      md5: 83e03d0a38273691f41f886040f59615
+      size: 5673019
+  Train:
+    cmd: "python -c \"from src.train import Train; Train.load(name='Train').run_and_save()\"\
+      \ "
     deps:
-    - path: data/features
-      md5: b4d13e5525577c1e4cbd31eafd1623d0.dir
-      size: 7083901
-      nfiles: 2
+    - path: data/features/test.pkl
+      md5: 8f66d794472e39baccdcc2c7debb4854
+      size: 1410882
+    - path: data/features/train.pkl
+      md5: 83e03d0a38273691f41f886040f59615
+      size: 5673019
     - path: src/train.py
-      md5: f820246e0f153093d46c8172fb646603
-      size: 1157
+      md5: db5dbb06102db7d5ea35282b0820dc83
+      size: 1173
     params:
       params.yaml:
-        train.min_split: 2
-        train.n_est: 50
-        train.seed: 20170428
+        Train:
+          min_split: 2
+          n_est: 50
+          seed: 20170428
     outs:
     - path: model.pkl
       md5: 9db4774fe0fd46bec983ae3fb2945760
       size: 2658152
-  evaluate:
-    cmd: python src/evaluate.py model.pkl data/features scores.json prc.json roc.json
+  Evaluate:
+    cmd: "python -c \"from src.evaluate import Evaluate; Evaluate.load(name='Evaluate').run_and_save()\"\
+      \ "
     deps:
-    - path: data/features
-      md5: b4d13e5525577c1e4cbd31eafd1623d0.dir
-      size: 7083901
-      nfiles: 2
     - path: model.pkl
       md5: 9db4774fe0fd46bec983ae3fb2945760
       size: 2658152
     - path: src/evaluate.py
-      md5: 5ecf6ed17e6e68cd08f6d60a303f5c87
-      size: 2212
+      md5: 8131c280bb70a378aed37b87cb78e2ba
+      size: 2339
     outs:
+    - path: nodes/Evaluate/metrics_no_cache.json
+      md5: 1cebde91831dc44c0de5ee975de4e8dc
+      size: 109
     - path: prc.json
       md5: ecfb2f2057eac913c2ce68876ced720c
       size: 4200
     - path: roc.json
       md5: 39fe83b2308b564573ba6d118688dbad
       size: 3952
-    - path: scores.json
-      md5: b614944af6d91184999762e360238513
-      size: 76

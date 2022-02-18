@@ -1,43 +1,46 @@
 stages:
-  prepare:
-    cmd: python src/prepare.py data/data.xml
+  Prepare:
+    cmd: "python -c \"from src.prepare import Prepare; Prepare.load(name='Prepare').run_and_save()\"\
+      \ "
     deps:
     - data/data.xml
     - src/prepare.py
     params:
-    - prepare.seed
-    - prepare.split
+    - Prepare
     outs:
-    - data/prepared
-  featurize:
-    cmd: python src/featurization.py data/prepared data/features
+    - data/prepared/test.tsv
+    - data/prepared/train.tsv
+  Featurize:
+    cmd: "python -c \"from src.featurization import Featurize; Featurize.load(name='Featurize').run_and_save()\"\
+      \ "
     deps:
-    - data/prepared
+    - data/prepared/test.tsv
+    - data/prepared/train.tsv
     - src/featurization.py
     params:
-    - featurize.max_features
-    - featurize.ngrams
+    - Featurize
     outs:
-    - data/features
-  train:
-    cmd: python src/train.py data/features model.pkl
+    - data/features/test.pkl
+    - data/features/train.pkl
+  Train:
+    cmd: "python -c \"from src.train import Train; Train.load(name='Train').run_and_save()\"\
+      \ "
     deps:
-    - data/features
+    - data/features/test.pkl
+    - data/features/train.pkl
     - src/train.py
     params:
-    - train.min_split
-    - train.n_est
-    - train.seed
+    - Train
     outs:
     - model.pkl
-  evaluate:
-    cmd: python src/evaluate.py model.pkl data/features scores.json prc.json roc.json
+  Evaluate:
+    cmd: "python -c \"from src.evaluate import Evaluate; Evaluate.load(name='Evaluate').run_and_save()\"\
+      \ "
     deps:
-    - data/features
     - model.pkl
     - src/evaluate.py
     metrics:
-    - scores.json:
+    - nodes/Evaluate/metrics_no_cache.json:
         cache: false
     plots:
     - prc.json:
