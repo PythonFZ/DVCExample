@@ -1,11 +1,10 @@
-from src.prepare import prepare
-from src.featurization import featurize
-from src.train import train
-from src.evaluate import evaluate
+from src.evaluate import Evaluate
+from src.featurization import Featurize
+from src.prepare import Prepare
+from src.train import Train
 
 if __name__ == "__main__":
-    prepare(run=True)
-    featurize(run=True)
-    train(run=True)
-    evaluate(run=True)
-
+    Prepare().write_graph(run=True)
+    Featurize().write_graph(run=True)
+    Train().write_graph(run=True)
+    Evaluate().write_graph(run=True)

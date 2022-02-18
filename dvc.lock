@@ -1,90 +1,92 @@
 schema: '2.0'
 stages:
-  prepare:
-    cmd: 'python -c "from src.prepare import prepare; prepare(exec_func=True)" '
+  Prepare:
+    cmd: "python -c \"from src.prepare import Prepare; Prepare.load(name='Prepare').run_and_save()\"\
+      \ "
     deps:
     - path: data/data.xml
       md5: a304afb96060aad90176268345e10355
       size: 37891850
     - path: src/prepare.py
-      md5: 83c2b6a204e3c0c28a32fe7ee32b3263
-      size: 1660
+      md5: 3c33de5974488f91e2103613a8be6e18
+      size: 1836
     params:
       params.yaml:
-        prepare:
+        Prepare:
           seed: 20170428
           split: 0.2
     outs:
-    - path: data/prepared
-      md5: a344143b26b2880ca09b766a1135becb.dir
-      size: 23886319
-      nfiles: 2
-  featurize:
-    cmd: 'python -c "from src.featurization import featurize; featurize(exec_func=True)" '
+    - path: data/prepared/test.tsv
+      md5: 6f597d341ceb7d8fbbe88859a892ef81
+      size: 4769363
+    - path: data/prepared/train.tsv
+      md5: 32b715ef0d71ff4c9e61f55b09c15e75
+      size: 19116956
+  Featurize:
+    cmd: "python -c \"from src.featurization import Featurize; Featurize.load(name='Featurize').run_and_save()\"\
+      \ "
     deps:
-    - path: data/prepared
-      md5: a344143b26b2880ca09b766a1135becb.dir
-      size: 23886319
-      nfiles: 2
+    - path: data/prepared/test.tsv
+      md5: 6f597d341ceb7d8fbbe88859a892ef81
+      size: 4769363
+    - path: data/prepared/train.tsv
+      md5: 32b715ef0d71ff4c9e61f55b09c15e75
+      size: 19116956
     - path: src/featurization.py
-      md5: 1522e852a424a2929bbf1daa3b8577a8
-      size: 2476
+      md5: 4f02d866a8a1eb9c9b055f0d2068b23e
+      size: 2551
     params:
       params.yaml:
-        featurize:
+        Featurize:
           max_features: 500
           ngrams: 1
     outs:
-    - path: data/features
-      md5: edd0796535f3f8b55731a0a1158dc967.dir
-      size: 7078969
-      nfiles: 2
-  train:
-    cmd: 'python -c "from src.train import train; train(exec_func=True)" '
+    - path: data/features/test.pkl
+      md5: 8f66d794472e39baccdcc2c7debb4854
+      size: 1410882
+    - path: data/features/train.pkl
+      md5: 83e03d0a38273691f41f886040f59615
+      size: 5673019
+  Train:
+    cmd: "python -c \"from src.train import Train; Train.load(name='Train').run_and_save()\"\
+      \ "
     deps:
-    - path: data/features
-      md5: edd0796535f3f8b55731a0a1158dc967.dir
-      size: 7078969
-      nfiles: 2
+    - path: data/features/test.pkl
+      md5: 8f66d794472e39baccdcc2c7debb4854
+      size: 1410882
+    - path: data/features/train.pkl
+      md5: 83e03d0a38273691f41f886040f59615
+      size: 5673019
     - path: src/train.py
-      md5: 713626ac19991c04f5d7f0f92f2e229a
-      size: 1048
+      md5: db5dbb06102db7d5ea35282b0820dc83
+      size: 1173
     params:
       params.yaml:
-        train:
+        Train:
           min_split: 2
           n_est: 50
           seed: 20170428
     outs:
     - path: model.pkl
-      md5: 4957e4f970f58059120b4c38c72057d0
-      size: 2777537
-  evaluate:
-    cmd: 'python -c "from src.evaluate import evaluate; evaluate(exec_func=True)" '
+      md5: 9db4774fe0fd46bec983ae3fb2945760
+      size: 2658152
+  Evaluate:
+    cmd: "python -c \"from src.evaluate import Evaluate; Evaluate.load(name='Evaluate').run_and_save()\"\
+      \ "
     deps:
-    - path: data/features
-      md5: edd0796535f3f8b55731a0a1158dc967.dir
-      size: 7078969
-      nfiles: 2
     - path: model.pkl
-      md5: 4957e4f970f58059120b4c38c72057d0
-      size: 2777537
+      md5: 9db4774fe0fd46bec983ae3fb2945760
+      size: 2658152
     - path: src/evaluate.py
-      md5: 1f5186232b1dd754f1d380b067a32d43
-      size: 2336
-    params:
-      params.yaml:
-        evaluate:
-          min_split: 2
-          n_est: 50
-          seed: 20170428
+      md5: 8131c280bb70a378aed37b87cb78e2ba
+      size: 2339
     outs:
+    - path: nodes/Evaluate/metrics_no_cache.json
+      md5: 1cebde91831dc44c0de5ee975de4e8dc
+      size: 109
     - path: prc.json
-      md5: 0187b0d492593eea04cfbcb1eea81172
-      size: 4264
+      md5: ecfb2f2057eac913c2ce68876ced720c
+      size: 4200
     - path: roc.json
-      md5: a9a319ff5c1f9e71731c7edb48ac93e1
-      size: 4010
-    - path: scores.json
-      md5: e71229c1b4d5b12444e8d1094981ada5
-      size: 76
+      md5: 39fe83b2308b564573ba6d118688dbad
+      size: 3952

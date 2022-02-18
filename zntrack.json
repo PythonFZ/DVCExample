@@ -1,92 +1,73 @@
 {
-    "prepare": {
-        "deps": [
-            {
-                "_type": "pathlib.Path",
-                "value": "data/data.xml"
-            },
-            {
-                "_type": "pathlib.Path",
-                "value": "src/prepare.py"
-            }
-        ],
-        "outs": {
+    "Prepare": {
+        "data": {
             "_type": "pathlib.Path",
-            "value": "data/prepared"
+            "value": "data/data.xml"
         },
-        "outs_no_cache": null,
-        "outs_persist": null,
-        "outs_persist_no_cache": null,
-        "metrics": null,
-        "metrics_no_cache": null,
-        "plots": null,
-        "plots_no_cache": null
-    },
-    "featurize": {
-        "deps": [
-            {
-                "_type": "pathlib.Path",
-                "value": "data/prepared"
-            },
-            {
-                "_type": "pathlib.Path",
-                "value": "src/featurization.py"
-            }
-        ],
-        "outs": {
+        "output_train": {
             "_type": "pathlib.Path",
-            "value": "data/features"
+            "value": "data/prepared/train.tsv"
         },
-        "outs_no_cache": null,
-        "outs_persist": null,
-        "outs_persist_no_cache": null,
-        "metrics": null,
-        "metrics_no_cache": null,
-        "plots": null,
-        "plots_no_cache": null
+        "output_test": {
+            "_type": "pathlib.Path",
+            "value": "data/prepared/test.tsv"
+        },
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/prepare.py"
+        }
     },
-    "train": {
-        "deps": [
-            {
-                "_type": "pathlib.Path",
-                "value": "data/features"
-            },
-            {
-                "_type": "pathlib.Path",
-                "value": "src/train.py"
+    "Featurize": {
+        "prepare": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.prepare",
+                "cls": "Prepare",
+                "name": "Prepare"
             }
-        ],
-        "outs": "model.pkl",
-        "outs_no_cache": null,
-        "outs_persist": null,
-        "outs_persist_no_cache": null,
-        "metrics": null,
-        "metrics_no_cache": null,
-        "plots": null,
-        "plots_no_cache": null
+        },
+        "train_output": {
+            "_type": "pathlib.Path",
+            "value": "data/features/train.pkl"
+        },
+        "test_output": {
+            "_type": "pathlib.Path",
+            "value": "data/features/test.pkl"
+        },
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/featurization.py"
+        }
     },
-    "evaluate": {
-        "deps": [
-            {
-                "_type": "pathlib.Path",
-                "value": "data/features"
-            },
-            "model.pkl",
-            {
-                "_type": "pathlib.Path",
-                "value": "src/evaluate.py"
+    "Train": {
+        "featurize": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.featurization",
+                "cls": "Featurize",
+                "name": "Featurize"
             }
-        ],
-        "outs": null,
-        "outs_no_cache": null,
-        "outs_persist": null,
-        "outs_persist_no_cache": null,
-        "metrics": null,
-        "metrics_no_cache": "scores.json",
-        "plots": null,
-        "plots_no_cache": [
-            "prc.json",
-            "roc.json"
-        ]
+        },
+        "model_file": "model.pkl",
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/train.py"
+        }
+    },
+    "Evaluate": {
+        "train": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.train",
+                "cls": "Train",
+                "name": "Train"
+            }
+        },
+        "prc_file": "prc.json",
+        "roc_file": "roc.json",
+        "_self": {
+            "_type": "pathlib.Path",
+            "value": "src/evaluate.py"
+        }
     }
 }
