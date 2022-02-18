@@ -1,81 +1,90 @@
 schema: '2.0'
 stages:
   prepare:
-    cmd: python src/prepare.py data/data.xml
+    cmd: 'python -c "from src.prepare import prepare; prepare(exec_func=True)" '
     deps:
     - path: data/data.xml
       md5: a304afb96060aad90176268345e10355
       size: 37891850
     - path: src/prepare.py
-      md5: 51549a1c87b182ebdd785704f56ffaf1
-      size: 1581
+      md5: 83c2b6a204e3c0c28a32fe7ee32b3263
+      size: 1660
     params:
       params.yaml:
-        prepare.seed: 20170428
-        prepare.split: 0.2
+        prepare:
+          seed: 20170428
+          split: 0.2
     outs:
     - path: data/prepared
-      md5: 20b786b6e6f80e2b3fcf17827ad18597.dir
+      md5: a344143b26b2880ca09b766a1135becb.dir
       size: 23886319
       nfiles: 2
   featurize:
-    cmd: python src/featurization.py data/prepared data/features
+    cmd: 'python -c "from src.featurization import featurize; featurize(exec_func=True)" '
     deps:
     - path: data/prepared
-      md5: 20b786b6e6f80e2b3fcf17827ad18597.dir
+      md5: a344143b26b2880ca09b766a1135becb.dir
       size: 23886319
       nfiles: 2
     - path: src/featurization.py
-      md5: 61c592707fd1b33e27819c87cf93f80a
-      size: 2391
+      md5: 1522e852a424a2929bbf1daa3b8577a8
+      size: 2476
     params:
       params.yaml:
-        featurize.max_features: 500
-        featurize.ngrams: 1
+        featurize:
+          max_features: 500
+          ngrams: 1
     outs:
     - path: data/features
-      md5: b4d13e5525577c1e4cbd31eafd1623d0.dir
-      size: 7083901
+      md5: edd0796535f3f8b55731a0a1158dc967.dir
+      size: 7078969
       nfiles: 2
   train:
-    cmd: python src/train.py data/features model.pkl
+    cmd: 'python -c "from src.train import train; train(exec_func=True)" '
     deps:
     - path: data/features
-      md5: b4d13e5525577c1e4cbd31eafd1623d0.dir
-      size: 7083901
+      md5: edd0796535f3f8b55731a0a1158dc967.dir
+      size: 7078969
       nfiles: 2
     - path: src/train.py
-      md5: 657f5df54934dca4a59dfae48574c552
-      size: 1103
+      md5: 713626ac19991c04f5d7f0f92f2e229a
+      size: 1048
     params:
       params.yaml:
-        train.min_split: 2
-        train.n_est: 50
-        train.seed: 20170428
+        train:
+          min_split: 2
+          n_est: 50
+          seed: 20170428
     outs:
     - path: model.pkl
-      md5: 9db4774fe0fd46bec983ae3fb2945760
-      size: 2658152
+      md5: 4957e4f970f58059120b4c38c72057d0
+      size: 2777537
   evaluate:
-    cmd: python src/evaluate.py model.pkl data/features scores.json prc.json roc.json
+    cmd: 'python -c "from src.evaluate import evaluate; evaluate(exec_func=True)" '
     deps:
     - path: data/features
-      md5: b4d13e5525577c1e4cbd31eafd1623d0.dir
-      size: 7083901
+      md5: edd0796535f3f8b55731a0a1158dc967.dir
+      size: 7078969
       nfiles: 2
     - path: model.pkl
-      md5: 9db4774fe0fd46bec983ae3fb2945760
-      size: 2658152
+      md5: 4957e4f970f58059120b4c38c72057d0
+      size: 2777537
     - path: src/evaluate.py
-      md5: fb7b5209c9237ea6cf63550e5fe9b817
-      size: 1943
+      md5: 1f5186232b1dd754f1d380b067a32d43
+      size: 2336
+    params:
+      params.yaml:
+        evaluate:
+          min_split: 2
+          n_est: 50
+          seed: 20170428
     outs:
     - path: prc.json
-      md5: ecfb2f2057eac913c2ce68876ced720c
-      size: 4200
+      md5: 0187b0d492593eea04cfbcb1eea81172
+      size: 4264
     - path: roc.json
-      md5: 39fe83b2308b564573ba6d118688dbad
-      size: 3952
+      md5: a9a319ff5c1f9e71731c7edb48ac93e1
+      size: 4010
     - path: scores.json
-      md5: b614944af6d91184999762e360238513
+      md5: e71229c1b4d5b12444e8d1094981ada5
       size: 76

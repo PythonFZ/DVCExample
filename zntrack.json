@@ -1,0 +1,92 @@
+{
+    "prepare": {
+        "deps": [
+            {
+                "_type": "pathlib.Path",
+                "value": "data/data.xml"
+            },
+            {
+                "_type": "pathlib.Path",
+                "value": "src/prepare.py"
+            }
+        ],
+        "outs": {
+            "_type": "pathlib.Path",
+            "value": "data/prepared"
+        },
+        "outs_no_cache": null,
+        "outs_persist": null,
+        "outs_persist_no_cache": null,
+        "metrics": null,
+        "metrics_no_cache": null,
+        "plots": null,
+        "plots_no_cache": null
+    },
+    "featurize": {
+        "deps": [
+            {
+                "_type": "pathlib.Path",
+                "value": "data/prepared"
+            },
+            {
+                "_type": "pathlib.Path",
+                "value": "src/featurization.py"
+            }
+        ],
+        "outs": {
+            "_type": "pathlib.Path",
+            "value": "data/features"
+        },
+        "outs_no_cache": null,
+        "outs_persist": null,
+        "outs_persist_no_cache": null,
+        "metrics": null,
+        "metrics_no_cache": null,
+        "plots": null,
+        "plots_no_cache": null
+    },
+    "train": {
+        "deps": [
+            {
+                "_type": "pathlib.Path",
+                "value": "data/features"
+            },
+            {
+                "_type": "pathlib.Path",
+                "value": "src/train.py"
+            }
+        ],
+        "outs": "model.pkl",
+        "outs_no_cache": null,
+        "outs_persist": null,
+        "outs_persist_no_cache": null,
+        "metrics": null,
+        "metrics_no_cache": null,
+        "plots": null,
+        "plots_no_cache": null
+    },
+    "evaluate": {
+        "deps": [
+            {
+                "_type": "pathlib.Path",
+                "value": "data/features"
+            },
+            "model.pkl",
+            {
+                "_type": "pathlib.Path",
+                "value": "src/evaluate.py"
+            }
+        ],
+        "outs": null,
+        "outs_no_cache": null,
+        "outs_persist": null,
+        "outs_persist_no_cache": null,
+        "metrics": null,
+        "metrics_no_cache": "scores.json",
+        "plots": null,
+        "plots_no_cache": [
+            "prc.json",
+            "roc.json"
+        ]
+    }
+}

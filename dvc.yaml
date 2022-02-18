@@ -1,41 +1,39 @@
 stages:
   prepare:
-    cmd: python src/prepare.py data/data.xml
+    cmd: 'python -c "from src.prepare import prepare; prepare(exec_func=True)" '
     deps:
     - data/data.xml
     - src/prepare.py
     params:
-    - prepare.seed
-    - prepare.split
+    - prepare
     outs:
     - data/prepared
   featurize:
-    cmd: python src/featurization.py data/prepared data/features
+    cmd: 'python -c "from src.featurization import featurize; featurize(exec_func=True)" '
     deps:
     - data/prepared
     - src/featurization.py
     params:
-    - featurize.max_features
-    - featurize.ngrams
+    - featurize
     outs:
     - data/features
   train:
-    cmd: python src/train.py data/features model.pkl
+    cmd: 'python -c "from src.train import train; train(exec_func=True)" '
     deps:
     - data/features
     - src/train.py
     params:
-    - train.min_split
-    - train.n_est
-    - train.seed
+    - train
     outs:
     - model.pkl
   evaluate:
-    cmd: python src/evaluate.py model.pkl data/features scores.json prc.json roc.json
+    cmd: 'python -c "from src.evaluate import evaluate; evaluate(exec_func=True)" '
     deps:
     - data/features
     - model.pkl
     - src/evaluate.py
+    params:
+    - evaluate
     metrics:
     - scores.json:
         cache: false
