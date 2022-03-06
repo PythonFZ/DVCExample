@@ -1,8 +1,8 @@
 import kaggle
 from zntrack import nodify, NodeConfig, config
 import matplotlib.pyplot as plt
-import numpy as np  # linear algebra
-import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np
+import pandas as pd
 from tensorflow.keras.utils import to_categorical
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -67,7 +67,7 @@ class TFModel(ZnTrackOption):
 # 
 # In this simple example we only define the epochs as parameters. For a more advanced Node you would try to catch all parameters, such as layer types, neurons, ... as `zn.params`.
 
-# In[28]:
+# In[ ]:
 
 
 class MLModel(Node):
