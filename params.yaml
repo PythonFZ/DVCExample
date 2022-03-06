@@ -1,7 +1,7 @@
 DataPreprocessor:
     dataset: sign_mnist_test
 MLModel:
-    epochs: 10
+    epochs: 3
 data_preprocess_test:
     dataset: sign_mnist_test
 download_kaggle:

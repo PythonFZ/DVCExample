@@ -1,15 +1,14 @@
+from zntrack import config
+import pathlib
 import kaggle
-from zntrack import nodify, NodeConfig, config
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from tensorflow.keras.utils import to_categorical
 from tensorflow import keras
 from tensorflow.keras import layers
-from zntrack import Node, zn, dvc
-import pathlib
+from tensorflow.keras.utils import to_categorical
+from zntrack import Node, NodeConfig, dvc, nodify, utils, zn
 from zntrack.core import ZnTrackOption
-from zntrack import utils
 
 
 @nodify(outs="dataset", params={"dataset": "datamunge/sign-language-mnist"})
@@ -67,7 +66,7 @@ class TFModel(ZnTrackOption):
 # 
 # In this simple example we only define the epochs as parameters. For a more advanced Node you would try to catch all parameters, such as layer types, neurons, ... as `zn.params`.
 
-# In[ ]:
+# In[11]:
 
 
 class MLModel(Node):

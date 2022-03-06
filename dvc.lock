@@ -4,8 +4,8 @@ stages:
     cmd: 'python -c "from src.download_kaggle import download_kaggle; download_kaggle(exec_func=True)" '
     deps:
     - path: src/download_kaggle.py
-      md5: 5d1d60b16f35c5111210f32212507cca
-      size: 611
+      md5: 591bd491b23c240794f94d326ba6ed24
+      size: 588
     params:
       params.yaml:
         download_kaggle:
@@ -24,8 +24,8 @@ stages:
       size: 210857086
       nfiles: 7
     - path: src/DataPreprocessor.py
-      md5: b16315ad9d4301e0067d603d1a4931d6
-      size: 1449
+      md5: 67d9effd488193de69f6fa0caa545247
+      size: 1359
     params:
       params.yaml:
         DataPreprocessor:
@@ -42,23 +42,23 @@ stages:
       md5: 06c4c054b31486be0e459494a542a428
       size: 60933818
     - path: src/MLModel.py
-      md5: f3bcfcab04c614ab0b8e13eed2c441aa
-      size: 4444
+      md5: cc84ab3f4d594c56f9ca704cf0c2a3ad
+      size: 4354
     params:
       params.yaml:
         MLModel:
-          epochs: 10
+          epochs: 3
     outs:
     - path: nodes/MLModel/metrics_no_cache.json
-      md5: dbd421272d1a4aac95d48b35e3764980
-      size: 167
+      md5: d0560fb595d87bed3da68097f1394e32
+      size: 193
     - path: nodes/MLModel/model
-      md5: ac73e0e06bf205ede6d0603f19c4f8ff.dir
+      md5: 2d9faeda8e22f4ab288d641caafc4606.dir
       size: 3273589
       nfiles: 4
     - path: nodes/MLModel/plots_no_cache.csv
-      md5: 2cdb49c43233e083c69bab420e3117c8
-      size: 696
+      md5: 8aee714962cb7edaddd7ac376e0da1e2
+      size: 282
   data_preprocess_test:
     cmd: "python -c \"from src.DataPreprocessor import DataPreprocessor; DataPreprocessor.load(name='data_preprocess_test').run_and_save()\"\
       \ "
@@ -68,8 +68,8 @@ stages:
       size: 210857086
       nfiles: 7
     - path: src/DataPreprocessor.py
-      md5: b16315ad9d4301e0067d603d1a4931d6
-      size: 1449
+      md5: 67d9effd488193de69f6fa0caa545247
+      size: 1359
     params:
       params.yaml:
         data_preprocess_test:
@@ -83,22 +83,22 @@ stages:
       \ "
     deps:
     - path: nodes/MLModel/metrics_no_cache.json
-      md5: dbd421272d1a4aac95d48b35e3764980
-      size: 167
+      md5: d0560fb595d87bed3da68097f1394e32
+      size: 193
     - path: nodes/MLModel/model
-      md5: ac73e0e06bf205ede6d0603f19c4f8ff.dir
+      md5: 2d9faeda8e22f4ab288d641caafc4606.dir
       size: 3273589
       nfiles: 4
     - path: nodes/MLModel/plots_no_cache.csv
-      md5: 2cdb49c43233e083c69bab420e3117c8
-      size: 696
+      md5: 8aee714962cb7edaddd7ac376e0da1e2
+      size: 282
     - path: nodes/data_preprocess_test/outs.json
       md5: 06c4c054b31486be0e459494a542a428
       size: 60933818
     - path: src/EvaluateModel.py
-      md5: b9e9e092a98f993f3e75c30ed1c59a97
-      size: 4798
+      md5: ae3acbfef093f6a84af7febdcf80fe96
+      size: 4708
     outs:
     - path: nodes/EvaluateModel/metrics_no_cache.json
-      md5: 68bcc096f5a084d78b0efec6ec6f2138
-      size: 94
+      md5: 48d72faf78cd30f7688a9b46a5b2b9e0
+      size: 107
