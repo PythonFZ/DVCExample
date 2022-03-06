@@ -1,0 +1,57 @@
+stages:
+  download_kaggle:
+    cmd: 'python -c "from src.download_kaggle import download_kaggle; download_kaggle(exec_func=True)" '
+    deps:
+    - src/download_kaggle.py
+    params:
+    - download_kaggle
+    outs:
+    - dataset
+  DataPreprocessor:
+    cmd: "python -c \"from src.DataPreprocessor import DataPreprocessor; DataPreprocessor.load(name='DataPreprocessor').run_and_save()\"\
+      \ "
+    deps:
+    - dataset
+    - src/DataPreprocessor.py
+    params:
+    - DataPreprocessor
+    outs:
+    - nodes/DataPreprocessor/outs.json
+  MLModel:
+    cmd: "python -c \"from src.MLModel import MLModel; MLModel.load(name='MLModel').run_and_save()\"\
+      \ "
+    deps:
+    - nodes/DataPreprocessor/outs.json
+    - src/MLModel.py
+    params:
+    - MLModel
+    outs:
+    - nodes/MLModel/model
+    metrics:
+    - nodes/MLModel/metrics_no_cache.json:
+        cache: false
+    plots:
+    - nodes/MLModel/plots_no_cache.csv:
+        cache: false
+  data_preprocess_test:
+    cmd: "python -c \"from src.DataPreprocessor import DataPreprocessor; DataPreprocessor.load(name='data_preprocess_test').run_and_save()\"\
+      \ "
+    deps:
+    - dataset
+    - src/DataPreprocessor.py
+    params:
+    - data_preprocess_test
+    outs:
+    - nodes/data_preprocess_test/outs.json
+  EvaluateModel:
+    cmd: "python -c \"from src.EvaluateModel import EvaluateModel; EvaluateModel.load(name='EvaluateModel').run_and_save()\"\
+      \ "
+    deps:
+    - nodes/MLModel/metrics_no_cache.json
+    - nodes/MLModel/model
+    - nodes/MLModel/plots_no_cache.csv
+    - nodes/data_preprocess_test/outs.json
+    - src/EvaluateModel.py
+    metrics:
+    - nodes/EvaluateModel/metrics_no_cache.json:
+        cache: false

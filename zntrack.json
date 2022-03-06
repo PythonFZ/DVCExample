@@ -1,0 +1,53 @@
+{
+    "download_kaggle": {
+        "outs": "dataset",
+        "outs_no_cache": null,
+        "outs_persist": null,
+        "outs_persist_no_cache": null,
+        "metrics": null,
+        "metrics_no_cache": null,
+        "deps": null,
+        "plots": null,
+        "plots_no_cache": null
+    },
+    "DataPreprocessor": {
+        "data": {
+            "_type": "pathlib.Path",
+            "value": "dataset"
+        }
+    },
+    "MLModel": {
+        "train_data": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.DataPreprocessor",
+                "cls": "DataPreprocessor",
+                "name": "DataPreprocessor"
+            }
+        }
+    },
+    "data_preprocess_test": {
+        "data": {
+            "_type": "pathlib.Path",
+            "value": "dataset"
+        }
+    },
+    "EvaluateModel": {
+        "ml_model": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.MLModel",
+                "cls": "MLModel",
+                "name": "MLModel"
+            }
+        },
+        "test_data": {
+            "_type": "ZnTrackType",
+            "value": {
+                "module": "src.DataPreprocessor",
+                "cls": "DataPreprocessor",
+                "name": "data_preprocess_test"
+            }
+        }
+    }
+}

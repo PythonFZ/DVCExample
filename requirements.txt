@@ -1,0 +1,3 @@
+git+git://github.com/zincware/ZnTrack.git#egg=zntrack
+kaggle
+tensorflow
