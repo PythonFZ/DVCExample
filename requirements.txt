@@ -1,4 +1,4 @@
-git+git://github.com/zincware/ZnTrack.git#egg=zntrack
+zntrack
 kaggle
 tensorflow
 matplotlib
